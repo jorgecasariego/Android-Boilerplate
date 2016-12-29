@@ -1,10 +1,12 @@
 package enterprisesolutions.dagger2_rx.mvp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by jorgecasariego on 27/12/16.
  */
 
-public class Cake {
+public class Cake implements Serializable{
     private int id;
     private  String title;
     private String previewDescription;

@@ -35,7 +35,6 @@ public class CakeAdapter extends RecyclerView.Adapter<CakeAdapter.Holder> {
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mLayoutInflater.inflate(R.layout.list_item_layout, parent, false);
-
         return new Holder(view);
     }
 
@@ -59,21 +58,24 @@ public class CakeAdapter extends RecyclerView.Adapter<CakeAdapter.Holder> {
         notifyDataSetChanged();
     }
 
-    public class Holder extends RecyclerView.ViewHolder{
+    public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.cake_icon) protected ImageView mCakeIcon;
         @Bind(R.id.textview_title) protected TextView mCakeTitle;
         @Bind(R.id.textview_preview_description) protected TextView mCakePreviewDescription;
 
         private Context mContext;
+        private Cake mCake;
 
         public Holder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             mContext = itemView.getContext();
             ButterKnife.bind(this, itemView);
         }
 
         public void bind(Cake cake) {
+            mCake = cake;
             mCakeTitle.setText(cake.getTitle());
             mCakePreviewDescription.setText(cake.getPreviewDescription());
 
@@ -81,5 +83,22 @@ public class CakeAdapter extends RecyclerView.Adapter<CakeAdapter.Holder> {
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mCakeIcon);
         }
+
+        @Override
+        public void onClick(View view) {
+            if (mCakeClickListener != null) {
+                mCakeClickListener.onClick(mCakeIcon, mCake, getAdapterPosition());
+            }
+        }
+    }
+
+    private OnCakeClickListener mCakeClickListener;
+
+    public void setCakeClickListener(OnCakeClickListener listener){
+        mCakeClickListener = listener;
+    }
+
+    public interface OnCakeClickListener {
+        void onClick(View v, Cake cake, int position);
     }
 }
